@@ -1,25 +1,40 @@
 package com.epam.esm.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan("com.epam.esm")
+@PropertySource("classpath:application.properties")
 public class JdbcConfig {
 
-    @Bean
-    public DataSource mysqlDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        //TODO read from file
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/gift_certificates");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
 
+    @Bean
+    public DataSource createDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
+    }
+
+    @Bean
+    public JdbcTemplate setDataSource() {
+        return new JdbcTemplate(createDataSource());
     }
 }
