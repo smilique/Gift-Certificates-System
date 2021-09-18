@@ -1,4 +1,4 @@
-package com.epam.esm.entities;
+package com.epam.esm.entity;
 
 /**
  * The interface declares it's successors must have a returnable id value
