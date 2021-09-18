@@ -8,8 +8,8 @@ create table gift_certificate
     description varchar(255) null,
     price decimal(9,2) null default 0,
     duration bigint null default 0,
-    create_date datetime,
-    last_update_date datetime
+    create_date datetime(3),
+    last_update_date datetime(3)
 )
     charset = utf8;
 
