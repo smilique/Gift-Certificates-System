@@ -12,18 +12,20 @@ insert into tag set id = 9, name = 'Cinema';
 insert into tag set id = 10, name = 'Auto Shop';
 insert into tag set id = 11, name = 'Clothes';
 
-insert into gift_certificate set id = 1, name = 'Workout Gift Card',
-                                 description = 'Unlimited access to GYM of your choice (including swimming pool)',
+insert into gift_certificate set id = 1, name = 'Workout Gift Card',description = 'Unlimited access to GYM',
                                  price = 1300, duration = 30,
                                  create_date = '2018-08-29T06:12:15.156', last_update_date = '2018-08-29T06:12:15.156';
-insert into gift_certificate set id = 2, name = 'Galaxy Mall Gift Card', description = 'You can choose any shop in the Galaxy mall',
+insert into gift_certificate set id = 2, name = 'Mall Gift Card', description = 'You can choose any shop in the mall',
                                  price = 2000, duration = 90,
                                  create_date = '2018-09-29T06:12:15.156', last_update_date = '2018-09-29T06:12:15.156';
-insert into gift_certificate set id = 3, name = 'DX Auto Parts', description = '', price = 1000, duration = 90,
+insert into gift_certificate set id = 3, name = 'Auto Parts', description = 'Auto parts gift card',
+                                 price = 1000, duration = 90,
                                  create_date = '2018-10-29T06:12:15.156', last_update_date = '2018-10-29T06:12:15.156';
-insert into gift_certificate set id = 4, name = 'Entertainment Centre', description = '', price = 1500, duration = 30,
+insert into gift_certificate set id = 4, name = 'Entertainment Centre', description = 'Entertainment centre gift card',
+                                 price = 1500, duration = 30,
                                  create_date = '2018-11-29T06:12:15.156', last_update_date = '2018-11-29T06:12:15.156';
-insert into gift_certificate set id = 5, name = 'Riverside Supermarket Gift Card', description = '', price = 3000, duration = 180,
+insert into gift_certificate set id = 5, name = 'Supermarket Gift Card', description = 'Supermarket gift card',
+                                 price = 3000, duration = 180,
                                  create_date = '2018-12-29T06:12:15.156', last_update_date = '2018-12-29T06:12:15.156';
 
 insert into tagged_gift_certificate set gift_certificate_id = 1, tag_id = 1;
