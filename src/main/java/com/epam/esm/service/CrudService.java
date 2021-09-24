@@ -1,17 +1,53 @@
 package com.epam.esm.service;
 
-import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.RepositoryException;
+import com.epam.esm.entity.Entity;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CrudService<T> {
+/**
+ * The interface declares its successors must have methods for CRUD operations
+ *
+ * @author Anton Tamashevich
+ * @version 1.0
+ * @param <T>
+ * @see com.epam.esm.entity.Entity
+ */
+public interface CrudService<T extends Entity> {
 
-    List<T> list() throws ServiceException;
-    void save(T t) throws RepositoryException;
-    Optional<T> get(Long id) throws RepositoryException;
-    void update(T t) throws RepositoryException;
-    void delete(Long id) throws RepositoryException;
+    /**
+     * Get all entities of T
+     *
+     * @return List<T>
+     */
+    List<T> getAll();
+
+    /**
+     * Save T entity into the db
+     *
+     * @param t object of T extends Entity
+     */
+    void save(T t);
+
+    /**
+     * Get single entity of T  with requested id
+     *
+     * @return Optional<T>
+     */
+    Optional<T> get(Long id);
+
+    /**
+     * Save changes in T entity
+     *
+     * @param t object of T extends Entity
+     */
+    void update(T t);
+
+    /**
+     * Delete T entity from db with requested id
+     *
+     * @param id unique id of T extends Entity
+     */
+    void delete(Long id);
 
 }
