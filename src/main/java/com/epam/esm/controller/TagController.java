@@ -1,8 +1,6 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.RepositoryException;
-import com.epam.esm.service.ServiceException;
 import com.epam.esm.service.TagService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,99 +12,97 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Handles HTTP requests to interact with Tag entities in the database
+ *
  * @author Anton Tamashevich
+ * @version 1.0
+ * @see com.epam.esm.service.TagService
  */
 
 @RestController
 @RequestMapping("/tags")
 public class TagController {
 
-    private static final Logger LOGGER = Logger.getLogger(TagController.class);
-
     private final TagService tagService;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
 
     public TagController(TagService tagService) {
         this.tagService = tagService;
     }
 
+    /**
+     * Gets all Tag entries from db sorted by Tag id
+     *
+     * @return ResponseEntity<>
+     * @throws JsonProcessingException
+     */
     @GetMapping
-    public ResponseEntity<String> getTags(@RequestBody(required = false) String body) throws ControllerException {
-        try {
-            List<Tag> tags = tagService.list();
-            return ResponseEntity.ok(
-                    objectMapper.writeValueAsString(tags));
-        } catch (JsonProcessingException | ServiceException e) {
-            LOGGER.error(e);
-            throw new ControllerException(e);
-        }
+    public ResponseEntity<String> getTags() throws JsonProcessingException {
+        List<Tag> tags = tagService.getAll();
+        return ResponseEntity.ok(
+                objectMapper.writeValueAsString(tags));
     }
 
+    /**
+     * Get Tag by Tag id
+     *
+     * @param id obligatory, Tag id
+     * @return ResponseEntity<>
+     * @throws JsonProcessingException
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<String> getTag(@PathVariable Long id) throws ControllerException {
-        try {
-            Optional<Tag> optionalTag = tagService.get(id);
-            if (optionalTag.isPresent()) {
-                Tag tag = optionalTag.get();
-                return ResponseEntity.ok(
-                        objectMapper.writeValueAsString(tag));
-            }  else {
-                return ResponseEntity.badRequest().body("");
-            }
-        } catch (JsonProcessingException | RepositoryException e) {
-            LOGGER.error(e);
-            throw new ControllerException(e);
-//            return ResponseEntity.badRequest().body("IAMERROR");
-        }
-    }
-
-    @GetMapping("/search/{name}")
-    public ResponseEntity<String> getTagByName(@PathVariable String name) throws ControllerException {
-        try {
-            Optional<Tag> optionalTag = tagService.get(name);
+    public ResponseEntity<String> getTag(@PathVariable Long id) throws JsonProcessingException {
+        Optional<Tag> optionalTag = tagService.get(id);
+        if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            return ResponseEntity.ok(objectMapper.writeValueAsString(tag));
-        } catch (RepositoryException | JsonProcessingException e) {
-            LOGGER.error(e);
-            throw new ControllerException(e);
-//            return ResponseEntity.badRequest().body("IAMERROR");
+            return ResponseEntity.ok(
+                    objectMapper.writeValueAsString(tag));
+        } else {
+            return ResponseEntity.badRequest().body("");
         }
     }
 
+    /**
+     * Get Tag by Tag name
+     *
+     * @param name obligatory, Tag name
+     * @return ResponseEntity<>
+     * @throws JsonProcessingException
+     */
+    @GetMapping("/search/{name}")
+    public ResponseEntity<String> getTagByName(@PathVariable String name) throws JsonProcessingException {
+        Optional<Tag> optionalTag = tagService.get(name);
+        if (optionalTag.isPresent()) {
+            Tag tag = optionalTag.get();
+            return ResponseEntity.ok(
+                    objectMapper.writeValueAsString(tag));
+        } else {
+            return ResponseEntity.badRequest().body("");
+        }
+    }
+
+    /**
+     * Delete Tag by id
+     *
+     * @param id Tag id
+     * @return ResponseEntity<>
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTag(@PathVariable String id) throws ControllerException {
-        try {
-            Long currentId = Long.parseLong(id);
-            tagService.delete(currentId);
-            return ResponseEntity.ok("");
-        } catch (RepositoryException e) {
-            LOGGER.error(e);
-            throw new ControllerException(e);
-        }
-
+    public ResponseEntity<String> deleteTag(@PathVariable String id) {
+        Long currentId = Long.parseLong(id);
+        tagService.delete(currentId);
+        return ResponseEntity.ok("");
     }
 
+    /**
+     * Add Certificate entity to the db
+     *
+     * @param tag Certificate entity in JSON format
+     * @return ResponseEntity<>
+     */
     @PostMapping("/add")
-    public ResponseEntity<String> addTag(@RequestBody Tag tag) throws ControllerException {
-        try {
-            tagService.save(tag);
-            return ResponseEntity.ok("");
-        } catch (RepositoryException e) {
-            LOGGER.error(e);
-            throw new ControllerException(e);
-        }
-
+    public ResponseEntity<String> addTag(@RequestBody Tag tag) {
+        tagService.save(tag);
+        return ResponseEntity.ok("");
     }
-
-//    @PutMapping("/update")
-//    public ResponseEntity<String> updateTag(@RequestBody Tag tag) throws ControllerException {
-//        try {
-//            tagService.update(tag);
-//            return ResponseEntity.ok("");
-//        } catch (RepositoryException e) {
-//            LOGGER.error(e);
-//            throw new ControllerException(e);
-//        }
-//    }
 }
