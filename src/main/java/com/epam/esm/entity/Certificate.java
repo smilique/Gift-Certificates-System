@@ -1,5 +1,7 @@
 package com.epam.esm.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -14,8 +16,10 @@ public class Certificate implements Entity {
     private String description;
     private BigDecimal price;
     private Long duration;
-    private ZonedDateTime createDate; // ISO 8601 format
-    private ZonedDateTime lastUpdateDate; // ISO 8601 format - ZonedDateTime.now( ZoneOffset.UTC ).format( DateTimeFormatter.ISO_INSTANT )
+    private ZonedDateTime createDate;
+    private ZonedDateTime lastUpdateDate;
+
+    @JsonProperty("tags")
     private List<Tag> tags;
 
     public Certificate() {
@@ -29,10 +33,6 @@ public class Certificate implements Entity {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -99,10 +99,14 @@ public class Certificate implements Entity {
         tags.add(tag);
     }
 
-    public void addTags(Tag... tags) {
-        this.tags
-                .addAll(
-                        Arrays.asList(tags));
+    public void addTags(Tag... additionalTags) {
+        tags.addAll(
+                Arrays.asList(additionalTags));
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

@@ -1,18 +1,23 @@
 package com.epam.esm.entity;
 
 /**
- * The interface declares it's successors must have a returnable id value
+ * The interface declares its successors must have an obligatory id field
  *
  * @author Anton Tomashevich
+ * @version 1.0
+ * @see com.epam.esm.entity.Certificate
+ * @see com.epam.esm.entity.Tag
  */
-
 public interface Entity {
 
     /**
-     * The method returns an identifier of object
-     *
-     * @return Long - unique identifier of instance
+     * The method sets a Long identifier of object
      */
+    void setId(Long id);
 
+    /**
+     * The method sets a Long identifier of object
+     * @return Long
+     */
     Long getId();
 }
