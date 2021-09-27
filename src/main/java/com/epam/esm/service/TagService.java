@@ -2,7 +2,6 @@ package com.epam.esm.service;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,14 +11,11 @@ import java.util.Optional;
 @Service
 public class TagService implements CrudService<Tag> {
 
-    private static final Logger LOGGER = Logger.getLogger(TagService.class);
-
     private final TagRepository repository;
 
     public TagService(TagRepository tagRepository) {
         repository = tagRepository;
     }
-
 
     @Override
     public List<Tag> getAll() {
@@ -54,7 +50,6 @@ public class TagService implements CrudService<Tag> {
 
     @Override
     public void update(Tag tag) {
-        repository.update(tag);
     }
 
     @Override

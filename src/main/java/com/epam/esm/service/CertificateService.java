@@ -2,7 +2,6 @@ package com.epam.esm.service;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.repository.CertificateRepository;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

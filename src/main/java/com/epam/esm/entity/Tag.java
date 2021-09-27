@@ -4,8 +4,6 @@ import java.util.Objects;
 
 public class Tag implements Entity {
 
-    public static final String TABLE = "tag";
-
     private Long id;
     private String name;
 

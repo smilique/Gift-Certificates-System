@@ -1,7 +1,6 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
-import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,7 +21,6 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
     private static final String SELECT_BY_NAME = "select * from tag where name = ?";
     private static final String SAVE = "insert into tag set name = ?";
     private static final String DELETE_BY_ID = "delete from tag where id = ?";
-    private static final String UPDATE = "update tag set name = ? where id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final BeanPropertyRowMapper<Tag> rowMapper = BeanPropertyRowMapper.newInstance(Tag.class);
@@ -56,8 +54,14 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
                     id.toString());
             return statement;
         }, rowMapper);
-        Tag tag = tagList.get(0);
-        return Optional.of(tag);
+        if (tagList.size() > 0) {
+            Tag tag = tagList.get(0);
+            return Optional.of(tag);
+        } else {
+            return Optional.empty();
+        }
+
+
     }
 
     public List<Map<String, Object>> save(List<Tag> tags) {
@@ -67,7 +71,8 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
         for (int i = 0; i < tags.size(); i++) {
             Tag tag = tags.get(i);
             builder.append("('");
-            builder.append(tag.getName());
+            builder.append(
+                    tag.getName());
             if (i + 1 == tags.size()) {
                 builder.append("')");
             } else {
@@ -98,21 +103,13 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
     public void delete(Long id) {
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID);
-            statement.setString(1, id.toString());
+            statement.setString(1,
+                    id.toString());
             return statement;
         });
     }
 
     @Override
     public void update(Tag entity) {
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(UPDATE);
-            statement.setString(1,
-                    entity.getName());
-            statement.setString(2,
-                    entity.getId()
-                            .toString());
-            return statement;
-        });
     }
 }

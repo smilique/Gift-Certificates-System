@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Certificate implements Entity {
-
-    public static final String TABLE = "gift_certificate";
 
     private Long id;
     private String name;
@@ -113,4 +113,40 @@ public class Certificate implements Entity {
     public Long getId() {
         return id;
     }
-}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Certificate that = (Certificate) o;
+        return Objects.equals(id,
+                that.id) &&
+                Objects.equals(name,
+                        that.name) &&
+                Objects.equals(description,
+                        that.description) &&
+                (price.compareTo(
+                        that.price) == 0) &&
+                Objects.equals(duration, that.duration) &&
+                Objects.equals(tags, that.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, duration, tags);
+    }
+
+    @Override
+    public String toString() {
+        return "Certificate{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price.floatValue() +
+                ", duration=" + duration +
+                ", createDate=" + createDate.format(DateTimeFormatter.ISO_INSTANT) +
+                ", lastUpdateDate=" + lastUpdateDate.format(DateTimeFormatter.ISO_INSTANT) +
+                ", tags=" + tags +
+                '}';
+    }
+};

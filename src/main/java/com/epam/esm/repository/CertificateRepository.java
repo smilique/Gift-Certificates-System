@@ -66,15 +66,12 @@ public class CertificateRepository implements CrudRepositoryInterface<Certificat
                     id.toString());
             return statement;
         }, rowMapper);
-        List<Tag> certificateTags = jdbcTemplate.query(connection -> {
-            PreparedStatement statement = connection.prepareStatement(SELECT_CERTIFICATE_TAGS);
-            statement.setString(1,
-                    id.toString());
-            return statement;
-        }, tagMapper);
-        Certificate certificate = certificates.get(0);
-        certificate.setTags(certificateTags);
-        return Optional.of(certificate);
+        if (certificates.isEmpty()) {
+            return Optional.empty();
+        } else {
+            Certificate certificate = certificates.get(0);
+            return addTags(certificate);
+        }
     }
 
     public Optional<Certificate> findByName(String name) {
@@ -87,8 +84,8 @@ public class CertificateRepository implements CrudRepositoryInterface<Certificat
         if (certificates.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(certificates
-                    .get(0));
+            Certificate certificate = certificates.get(0);
+            return addTags(certificate);
         }
     }
 
@@ -122,11 +119,13 @@ public class CertificateRepository implements CrudRepositoryInterface<Certificat
         builder.append(ORDER_BY_DATE);
         builder.append(dateSort);
         String query = builder.toString();
-        return searchForValue(searchString, query);
+        List<Certificate> certificates = searchForValue(searchString, query);
+        return addTags(certificates);
     }
 
     public List<Certificate> find(String searchString) {
-        return searchForValue(searchString, SELECT_LIKE);
+        List<Certificate> certificates = searchForValue(searchString, SELECT_LIKE);
+        return addTags(certificates);
     }
 
     public void setTagsToCertificates(List<Map<String, Object>> tagKeys, Long certificateId) {
@@ -186,6 +185,7 @@ public class CertificateRepository implements CrudRepositoryInterface<Certificat
 
     @Override
     public void update(Certificate entity) {
+        List<Tag> tags = entity.getTags();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(UPDATE);
             statement.setString(1,
@@ -199,8 +199,6 @@ public class CertificateRepository implements CrudRepositoryInterface<Certificat
             statement.setString(6,
                     entity.getId()
                             .toString());
-            //TODO add Tags
-            List<Tag> tags = entity.getTags();
             return statement;
         });
     }
@@ -218,16 +216,25 @@ public class CertificateRepository implements CrudRepositoryInterface<Certificat
 
     private List<Certificate> addTags(List<Certificate> certificates) {
         for (Certificate certificate : certificates) {
-            List<Tag> certificateTags = jdbcTemplate.query(connection -> {
-                PreparedStatement statement = connection.prepareStatement(SELECT_CERTIFICATE_TAGS);
-                Long id = certificate.getId();
-                statement.setString(1,
-                        id.toString());
-                return statement;
-            }, tagMapper);
-            certificate.setTags(certificateTags);
+            setTags(certificate);
         }
         return certificates;
+    }
+
+    private Optional<Certificate> addTags(Certificate certificate) {
+        setTags(certificate);
+        return Optional.of(certificate);
+    }
+
+    private void setTags(Certificate certificate) {
+        List<Tag> certificateTags = jdbcTemplate.query(connection -> {
+            PreparedStatement statement = connection.prepareStatement(SELECT_CERTIFICATE_TAGS);
+            Long id = certificate.getId();
+            statement.setString(1,
+                    id.toString());
+            return statement;
+        }, tagMapper);
+        certificate.setTags(certificateTags);
     }
 
     private String getDateTime() {
