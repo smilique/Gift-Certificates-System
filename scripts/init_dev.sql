@@ -25,9 +25,9 @@ create table tagged_gift_certificate
         id bigint auto_increment primary key,
         gift_certificate_id bigint null,
         constraint certificate
-            foreign key (gift_certificate_id) references gift_certificate (id),
+            foreign key (gift_certificate_id) references gift_certificate (id) on delete cascade ,
         tag_id bigint null,
         constraint tag
-            foreign key (tag_id) references tag (id)
+            foreign key (tag_id) references tag (id) on delete cascade
 )
     charset = utf8;
