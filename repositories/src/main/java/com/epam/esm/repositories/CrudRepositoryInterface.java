@@ -1,6 +1,6 @@
-package com.epam.esm.repository;
+package com.epam.esm.repositories;
 
-import com.epam.esm.entity.Entity;
+import com.epam.esm.entities.Entity;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @version 1.0
  * @see com.epam.esm.repository
  * @param <T>
- * @see com.epam.esm.entity.Entity
+ * @see com.epam.esm.entities.Entity
  */
 public interface CrudRepositoryInterface<T extends Entity> {
 

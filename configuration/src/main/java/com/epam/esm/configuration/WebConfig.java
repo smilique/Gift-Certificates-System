@@ -1,4 +1,4 @@
-package com.epam.esm.config;
+package com.epam.esm.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

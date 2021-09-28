@@ -1,4 +1,4 @@
-package com.epam.esm.controller;
+package com.epam.esm.controllers;
 
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;

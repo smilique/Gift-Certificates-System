@@ -1,13 +1,11 @@
-package com.epam.esm.controller;
+package com.epam.esm.controllers;
 
 import com.epam.esm.entities.Tag;
 import com.epam.esm.services.TagService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -109,8 +107,8 @@ public class TagController {
 
 
     //TODO delete it
-    @GetMapping("notFound")
-    public ResponseEntity<String> throwNotFound() throws NoHandlerFoundException {
-        throw new NoHandlerFoundException("HttpMethod.GET", "/tags/notFound", new HttpHeaders());
-    }
+//    @GetMapping("notFound")
+//    public ResponseEntity<String> throwNotFound() throws NoHandlerFoundException {
+//        throw new NoHandlerFoundException("HttpMethod.GET", "/tags/notFound", new HttpHeaders());
+//    }
 }

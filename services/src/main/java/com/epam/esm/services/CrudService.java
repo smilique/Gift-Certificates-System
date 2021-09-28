@@ -1,6 +1,6 @@
-package com.epam.esm.service;
+package com.epam.esm.services;
 
-import com.epam.esm.entity.Entity;
+import com.epam.esm.entities.Entity;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.Optional;
  * @author Anton Tamashevich
  * @version 1.0
  * @param <T>
- * @see com.epam.esm.entity.Entity
+ * @see com.epam.esm.entities.Entity
  */
 public interface CrudService<T extends Entity> {
 

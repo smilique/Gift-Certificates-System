@@ -1,6 +1,6 @@
-package com.epam.esm.repository;
+package com.epam.esm.repositories;
 
-import com.epam.esm.entity.Tag;
+import com.epam.esm.entities.Tag;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
-package com.epam.esm.service;
+package com.epam.esm.services;
 
-import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.CertificateRepository;
-import com.epam.esm.repository.TagRepository;
+import com.epam.esm.entities.Certificate;
+import com.epam.esm.entities.Tag;
+import com.epam.esm.repositories.CertificateRepository;
+import com.epam.esm.repositories.TagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

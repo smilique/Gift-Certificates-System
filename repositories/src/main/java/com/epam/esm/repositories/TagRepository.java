@@ -1,6 +1,6 @@
-package com.epam.esm.repository;
+package com.epam.esm.repositories;
 
-import com.epam.esm.entity.Tag;
+import com.epam.esm.entities.Tag;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

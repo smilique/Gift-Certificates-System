@@ -1,12 +1,12 @@
-package com.epam.esm.entity;
+package com.epam.esm.entities;
 
 /**
  * The interface declares its successors must have an obligatory id field
  *
  * @author Anton Tomashevich
  * @version 1.0
- * @see com.epam.esm.entity.Certificate
- * @see com.epam.esm.entity.Tag
+ * @see Certificate
+ * @see Tag
  */
 public interface Entity {
 

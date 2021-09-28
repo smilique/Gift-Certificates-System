@@ -1,4 +1,4 @@
-package com.epam.esm.entity;
+package com.epam.esm.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

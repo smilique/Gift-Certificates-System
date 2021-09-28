@@ -4,13 +4,22 @@ plugins {
 
 group 'com.epam.esm'
 version '1.0'
+//sourceCompatibility = '1.8'
+
 
 repositories {
     mavenCentral()
 }
 
+
+
 dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation project (':entities')
+    implementation project (':repositories')
+    implementation project (':services')
+    implementation project (':controllers')
+    implementation project (':configuration')
     implementation 'javax.servlet:jstl:1.2'
     implementation 'org.springframework.data:spring-data-rest-webmvc:3.5.5'
     implementation 'org.springframework:spring-context:5.3.10'

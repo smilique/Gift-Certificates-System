@@ -1,12 +1,13 @@
-package com.epam.esm.service;
+package com.epam.esm.services;
 
-import com.epam.esm.entity.Certificate;
-import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.entities.Certificate;
+import com.epam.esm.repositories.CertificateRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -50,7 +51,7 @@ class CertificateServiceTest {
     @Test
     void testCertificateServiceShouldReturnCertificateEntitiesFromDb() {
         //given
-        when(certificateRepository.findAll()).thenReturn(CERTIFICATES);
+        Mockito.when(certificateRepository.findAll()).thenReturn(CERTIFICATES);
         //when
         List<Certificate> actual = certificateService.getAll();
         //then
@@ -63,7 +64,7 @@ class CertificateServiceTest {
         List<Certificate> expected = new ArrayList<>();
         expected.add(THIRD_CERTIFICATE);
         String searchString = THIRD_CERTIFICATE.getDescription();
-        when(certificateRepository.find(searchString)).thenReturn(expected);
+        Mockito.when(certificateRepository.find(searchString)).thenReturn(expected);
         //when
         List<Certificate> actual = certificateService.list(searchString);
         //then
@@ -74,7 +75,7 @@ class CertificateServiceTest {
     void testCertificateServiceShouldSortResultsByCertificateNameAndDate() {
         //given
         List<Certificate> expected = Arrays.asList(SECOND_CERTIFICATE, FIRST_CERTIFICATE, THIRD_CERTIFICATE);
-        when(certificateRepository.findAll(NAME_SORT, DATE_SORT)).thenReturn(expected);
+        Mockito.when(certificateRepository.findAll(NAME_SORT, DATE_SORT)).thenReturn(expected);
         //when
         List<Certificate> actual = certificateService.list(NAME_SORT, DATE_SORT);
         //then
@@ -85,7 +86,7 @@ class CertificateServiceTest {
     void testCertificateServiceShouldSortSearchResultsByCertificateNameAndDate() {
         //given
         List<Certificate> expected = Arrays.asList(SECOND_CERTIFICATE, FIRST_CERTIFICATE);
-        when(certificateRepository.findAndSort(NAME_SORT, DATE_SORT, SEARCH_STRING)).thenReturn(expected);
+        Mockito.when(certificateRepository.findAndSort(NAME_SORT, DATE_SORT, SEARCH_STRING)).thenReturn(expected);
         //when
         List<Certificate> actual = certificateService.search(NAME_SORT, DATE_SORT, SEARCH_STRING);
         //then
@@ -98,7 +99,7 @@ class CertificateServiceTest {
         //when
         certificateService.save(FIRST_CERTIFICATE);
         //then
-        verify(certificateRepository, times(1)).save(FIRST_CERTIFICATE);
+        Mockito.verify(certificateRepository, Mockito.times(1)).save(FIRST_CERTIFICATE);
     }
 
     @Test
@@ -106,7 +107,7 @@ class CertificateServiceTest {
         //given
         Long certificateId = FIRST_CERTIFICATE.getId();
         Optional<Certificate> expected = Optional.of(FIRST_CERTIFICATE);
-        when(certificateRepository.findById(certificateId)).thenReturn(expected);
+        Mockito.when(certificateRepository.findById(certificateId)).thenReturn(expected);
         //when
         Optional<Certificate> actual = certificateService.get(certificateId);
         //then
@@ -119,7 +120,7 @@ class CertificateServiceTest {
         //when
         certificateService.update(FIRST_CERTIFICATE);
         //then
-        verify(certificateRepository, times(1)).update(FIRST_CERTIFICATE);
+        Mockito.verify(certificateRepository, Mockito.times(1)).update(FIRST_CERTIFICATE);
     }
 
     @Test
@@ -129,6 +130,6 @@ class CertificateServiceTest {
         //when
         certificateService.delete(certificateId);
         //then
-        verify(certificateRepository, times(1)).delete(certificateId);
+        Mockito.verify(certificateRepository, Mockito.times(1)).delete(certificateId);
     }
 }

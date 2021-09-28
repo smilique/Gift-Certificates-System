@@ -1,4 +1,4 @@
-package com.epam.esm.controller;
+package com.epam.esm.controllers;
 
 import com.epam.esm.entities.Certificate;
 import com.epam.esm.services.CertificateService;

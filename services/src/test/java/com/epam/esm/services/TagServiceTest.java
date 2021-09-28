@@ -1,12 +1,13 @@
-package com.epam.esm.service;
+package com.epam.esm.services;
 
-import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.TagRepository;
+import com.epam.esm.entities.Tag;
+import com.epam.esm.repositories.TagRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ class TagServiceTest {
     @Test
     void testTagServiceShouldReturnMultiplyEntitiesWhenGetAllCalled() {
         //given
-        when(tagRepository.findAll()).thenReturn(TAGS);
+        Mockito.when(tagRepository.findAll()).thenReturn(TAGS);
         //when
         List<Tag> actual = tagService.getAll();
         //then
@@ -46,7 +47,7 @@ class TagServiceTest {
         //when
         tagService.save(FIRST_TAG);
         //then
-        verify(tagRepository, times(wantedNumberOfInvocations)).save(FIRST_TAG);
+        Mockito.verify(tagRepository, Mockito.times(wantedNumberOfInvocations)).save(FIRST_TAG);
     }
 
     @Test
@@ -55,7 +56,7 @@ class TagServiceTest {
         //when
         tagService.save(TAGS);
         //then
-        verify(tagRepository, times(wantedNumberOfInvocations)).save(TAGS);
+        Mockito.verify(tagRepository, Mockito.times(wantedNumberOfInvocations)).save(TAGS);
     }
 
     @Test
@@ -63,7 +64,7 @@ class TagServiceTest {
         //given
         Optional<Tag> expected = Optional.of(FIRST_TAG);
         Long tagId = FIRST_TAG.getId();
-        when(tagRepository.findById(tagId)).thenReturn(expected);
+        Mockito.when(tagRepository.findById(tagId)).thenReturn(expected);
         //when
         Optional<Tag> actual = tagService.get(tagId);
         //then
@@ -75,7 +76,7 @@ class TagServiceTest {
         //given
         Optional<Tag> expected = Optional.of(FIRST_TAG);
         String tagName = FIRST_TAG.getName();
-        when(tagRepository.findByName(tagName)).thenReturn(expected);
+        Mockito.when(tagRepository.findByName(tagName)).thenReturn(expected);
         //when
         Optional<Tag> actual = tagService.get(tagName);
         //then
@@ -89,6 +90,6 @@ class TagServiceTest {
         //when
         tagService.delete(tagId);
         //then
-        verify(tagRepository, times(wantedNumberOfInvocations)).delete(tagId);
+        Mockito.verify(tagRepository, Mockito.times(wantedNumberOfInvocations)).delete(tagId);
     }
 }
