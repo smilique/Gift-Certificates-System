@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.epam.esm'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project (':entities')
+    implementation 'org.springframework:spring-jdbc:5.3.10'
+    implementation 'org.springframework:spring-context:5.3.10'
+    implementation 'log4j:log4j:1.2.17'
+    testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}

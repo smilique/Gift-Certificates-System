@@ -1,0 +1,12 @@
+/.idea/
+/.gradle/
+/build/
+/src/main/resources/task.txt
+/configuration/build/
+/services/build/
+/repositories/build/
+/gradle/
+/controllers/build/
+/gradlew
+/gradlew.bat
+/entities/build/
