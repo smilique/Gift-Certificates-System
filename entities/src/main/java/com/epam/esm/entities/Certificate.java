@@ -161,4 +161,4 @@ public class Certificate implements Entity {
                 ", tags=" + tags +
                 '}';
     }
-};
+}

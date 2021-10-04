@@ -19,10 +19,8 @@ class TagRepositoryTest {
     private static final Tag SECOND_TAG = new Tag(2L, "Test tag 2");
     private static final Tag THIRD_TAG = new Tag(3L, "Test tag 3");
     private static final Tag FOURTH_TAG = new Tag(4L, "Test tag 4");
-    private static final Tag FIRST_ADDITIONAL_TAG = new Tag(5L, "Additional tag 1");
-    private static final Tag SECOND_ADDITIONAL_TAG = new Tag(6L, "Additional tag 2");
+    private static final Tag ADDITIONAL_TAG = new Tag(5L, "Additional tag 1");
     private static final List<Tag> TAGS = Arrays.asList(FIRST_TAG, SECOND_TAG, THIRD_TAG, FOURTH_TAG);
-    private static final List<Tag> ADDITIONAL_TAGS = Arrays.asList(FIRST_ADDITIONAL_TAG, SECOND_ADDITIONAL_TAG);
 
     private TagRepository tagRepository;
 
@@ -71,25 +69,13 @@ class TagRepositoryTest {
     @Test
     void testTagRepositoryShouldAddEntryToDatabase() {
         //given
-        tagRepository.save(FIRST_ADDITIONAL_TAG);
-        Long tagId = FIRST_ADDITIONAL_TAG.getId();
-        Optional<Tag> expected = Optional.of(FIRST_ADDITIONAL_TAG);
+        tagRepository.save(ADDITIONAL_TAG);
+        Long tagId = ADDITIONAL_TAG.getId();
+        Optional<Tag> expected = Optional.of(ADDITIONAL_TAG);
         //when
         Optional<Tag> actual = tagRepository.findById(tagId);
         //then
         Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testTagRepositoryShouldAddMultipleEntriesToDatabase() {
-        //given
-        tagRepository.save(ADDITIONAL_TAGS);
-        //when
-        List<Tag> tags = tagRepository.findAll();
-        int tagsSize = tags.size();
-        List<Tag> actual = tags.subList(tagsSize-2, tagsSize);
-        //then
-        Assertions.assertEquals(ADDITIONAL_TAGS, actual);
     }
 
     @Test

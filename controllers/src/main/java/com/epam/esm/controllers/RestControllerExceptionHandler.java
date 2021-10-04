@@ -27,7 +27,6 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     private static final String REQUEST_PARAMETER_ERROR = "exception.requestParameter";
     private static final String REQUEST_METHOD_ERROR = "exception.requestMethod";
     private static final String NO_HANDLER_EXCEPTION = "exception.noHandler";
-    private static final String NUMBER_FORMAT_ERROR = "exception.numberFormat";
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException exception,

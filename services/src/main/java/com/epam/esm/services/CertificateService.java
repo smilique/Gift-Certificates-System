@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,19 +26,29 @@ public class CertificateService implements CrudService<Certificate> {
         return certRepository.findAll();
     }
 
-    public List<Certificate> list(String searchString) {
+    public List<Certificate> getByName(String searchString) {
         return certRepository.find(searchString);
     }
 
-    public List<Certificate> list(String sortByName, String sortByDate) {
+    public List<Certificate> getByName(String sortByName, String sortByDate) {
         return certRepository.findAll(sortByName, sortByDate);
     }
 
     public List<Certificate> search(String nameSort, String dateSort, String searchString) {
-        return certRepository.findAndSort(nameSort, dateSort, searchString);
+        if (searchString == null && dateSort == null && nameSort == null) {
+            return certRepository.findAll();
+        } else if (searchString == null && dateSort == null) {
+            return certRepository.findAllSortByName(nameSort);
+        } else if (searchString == null && nameSort == null) {
+            return certRepository.findAllSortByDate(dateSort);
+        } else if (searchString == null) {
+            return certRepository.findAll(nameSort, dateSort);
+        } else {
+            return certRepository.findAndSort(nameSort, dateSort, searchString);
+        }
     }
 
-    public List<Certificate> listByTagName(String tagName) {
+    public List<Certificate> getByTagName(String tagName) {
         return certRepository.findByTagName(tagName);
     }
 
@@ -49,11 +58,43 @@ public class CertificateService implements CrudService<Certificate> {
         return optionalCert.isPresent();
     }
 
+    private boolean isCertificateWithIdExists(Certificate certificate) {
+        Long id = certificate.getId();
+        Optional<Certificate> optionalCertificate = certRepository.findById(id);
+        return optionalCertificate.isPresent();
+    }
+
     @Override
+    @Transactional
     public void save(Certificate certificate) {
         if (!isCertificateWithNameExists(certificate)) {
-            certRepository.save(certificate);
+            List<Tag> actualTags = setActualTags(certificate);
+            certRepository.createNewCertificate(certificate, actualTags);
         }
+    }
+
+    @Transactional
+    public void updateExistingCertificate(Certificate certificate) {
+        if (isCertificateWithIdExists(certificate)) {
+            List<Tag> actualTags = setActualTags(certificate);
+            certRepository.update(certificate, actualTags);
+        }
+    }
+
+    private List<Tag> setActualTags(Certificate certificate) {
+        List<Tag> tags = certificate.getTags();
+        for (Tag tag: tags) {
+            String tagName = tag.getName();
+            Optional<Tag> optionalTag = tagRepository.findByName(tagName);
+            if (!optionalTag.isPresent()) {
+                tag.setId(tagRepository.saveNew(tag));
+            } else {
+                Tag entity = optionalTag.get();
+                Long tagId = entity.getId();
+                tag.setId(tagId);
+            }
+        }
+        return tags;
     }
 
     @Override
@@ -69,18 +110,5 @@ public class CertificateService implements CrudService<Certificate> {
     @Override
     public void delete(Long id) {
         certRepository.delete(id);
-    }
-
-    public void setTags(List<Map<String, Object>> tagKeys, Long certificateId) {
-        certRepository.setTagsToCertificates(tagKeys, certificateId);
-    }
-
-    @Transactional
-    public void updateExistingCertificate(Certificate certificate) {
-        List<Tag> tags = certificate.getTags();
-        List<Map<String, Object>> tagKeys = tagRepository.save(tags);
-        Long certificateId = certificate.getId();
-        setTags(tagKeys, certificateId);
-        update(certificate);
     }
 }

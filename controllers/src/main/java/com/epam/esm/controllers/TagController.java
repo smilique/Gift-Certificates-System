@@ -38,8 +38,9 @@ public class TagController {
     @GetMapping
     public ResponseEntity<String> getTags() throws JsonProcessingException {
         List<Tag> tags = tagService.getAll();
-        return ResponseEntity.ok(
-                objectMapper.writeValueAsString(tags));
+        return ResponseEntity.ok(objectMapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(tags));
     }
 
     /**
@@ -54,8 +55,9 @@ public class TagController {
         Optional<Tag> optionalTag = tagService.get(id);
         if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            return ResponseEntity.ok(
-                    objectMapper.writeValueAsString(tag));
+            return ResponseEntity.ok(objectMapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(tag));
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -73,8 +75,9 @@ public class TagController {
         Optional<Tag> optionalTag = tagService.get(name);
         if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            return ResponseEntity.ok(
-                    objectMapper.writeValueAsString(tag));
+            return ResponseEntity.ok(objectMapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(tag));
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -88,7 +91,6 @@ public class TagController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTag(@PathVariable Long id) {
-//        Long currentId = Long.parseLong(id);
         tagService.delete(id);
         return ResponseEntity.accepted().build();
     }
@@ -105,10 +107,4 @@ public class TagController {
         return ResponseEntity.accepted().build();
     }
 
-
-    //TODO delete it
-//    @GetMapping("notFound")
-//    public ResponseEntity<String> throwNotFound() throws NoHandlerFoundException {
-//        throw new NoHandlerFoundException("HttpMethod.GET", "/tags/notFound", new HttpHeaders());
-//    }
 }

@@ -1,7 +1,9 @@
 package com.epam.esm.services;
 
 import com.epam.esm.entities.Certificate;
+import com.epam.esm.entities.Tag;
 import com.epam.esm.repositories.CertificateRepository;
+import com.epam.esm.repositories.TagRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,17 +11,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.Mockito.*;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class CertificateServiceTest {
 
     private static final Certificate FIRST_CERTIFICATE = new Certificate(1L, "B# Test certificate 1",
@@ -38,12 +38,17 @@ class CertificateServiceTest {
             ZonedDateTime.parse("2018-09-29T06:12:15.200Z"),
             ZonedDateTime.parse("2018-09-29T06:12:15.200Z"));
     private static final List<Certificate> CERTIFICATES = Arrays.asList(FIRST_CERTIFICATE, SECOND_CERTIFICATE, THIRD_CERTIFICATE);
+    private static final Tag TAG = new Tag(1L, "TestTag");
     private static final String DATE_SORT = "desc";
     private static final String NAME_SORT = "asc";
     private static final String SEARCH_STRING = "#";
+    private static final int WANTED_NUMBER_OF_INVOCATIONS = 1;
 
     @Mock
     CertificateRepository certificateRepository;
+
+    @Mock
+    TagRepository tagRepository;
 
     @InjectMocks
     CertificateService certificateService;
@@ -66,7 +71,7 @@ class CertificateServiceTest {
         String searchString = THIRD_CERTIFICATE.getDescription();
         Mockito.when(certificateRepository.find(searchString)).thenReturn(expected);
         //when
-        List<Certificate> actual = certificateService.list(searchString);
+        List<Certificate> actual = certificateService.getByName(searchString);
         //then
         Assertions.assertEquals(expected, actual);
     }
@@ -77,7 +82,7 @@ class CertificateServiceTest {
         List<Certificate> expected = Arrays.asList(SECOND_CERTIFICATE, FIRST_CERTIFICATE, THIRD_CERTIFICATE);
         Mockito.when(certificateRepository.findAll(NAME_SORT, DATE_SORT)).thenReturn(expected);
         //when
-        List<Certificate> actual = certificateService.list(NAME_SORT, DATE_SORT);
+        List<Certificate> actual = certificateService.getByName(NAME_SORT, DATE_SORT);
         //then
         Assertions.assertEquals(expected, actual);
     }
@@ -96,10 +101,16 @@ class CertificateServiceTest {
     @Test
     void testCertificateServiceShouldPassCertificateEntityToRepository() {
         //given
+        List<Tag> tags = Arrays.asList(TAG);
+        FIRST_CERTIFICATE.setTags(tags);
+        Long tagId = TAG.getId();
+        Mockito.when(tagRepository.findByName(FIRST_CERTIFICATE.getName())).thenReturn(Optional.of(TAG));
+        Mockito.when(tagRepository.saveNew(TAG)).thenReturn(tagId);
+        Mockito.when(certificateRepository.findById(tagId)).thenReturn(Optional.of(FIRST_CERTIFICATE));
         //when
         certificateService.save(FIRST_CERTIFICATE);
         //then
-        Mockito.verify(certificateRepository, Mockito.times(1)).save(FIRST_CERTIFICATE);
+        Mockito.verify(certificateRepository, Mockito.times(WANTED_NUMBER_OF_INVOCATIONS)).createNewCertificate(FIRST_CERTIFICATE, tags);
     }
 
     @Test
@@ -120,7 +131,7 @@ class CertificateServiceTest {
         //when
         certificateService.update(FIRST_CERTIFICATE);
         //then
-        Mockito.verify(certificateRepository, Mockito.times(1)).update(FIRST_CERTIFICATE);
+        Mockito.verify(certificateRepository, Mockito.times(WANTED_NUMBER_OF_INVOCATIONS)).update(FIRST_CERTIFICATE);
     }
 
     @Test
@@ -130,6 +141,6 @@ class CertificateServiceTest {
         //when
         certificateService.delete(certificateId);
         //then
-        Mockito.verify(certificateRepository, Mockito.times(1)).delete(certificateId);
+        Mockito.verify(certificateRepository, Mockito.times(WANTED_NUMBER_OF_INVOCATIONS)).delete(certificateId);
     }
 }

@@ -7,3 +7,6 @@
 /repositories/build/
 /gradle/
 /controllers/build/
+/gradlew
+/gradlew.bat
+/entities/build/

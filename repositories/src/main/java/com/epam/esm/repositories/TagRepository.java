@@ -1,6 +1,7 @@
 package com.epam.esm.repositories;
 
 import com.epam.esm.entities.Tag;
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,13 +11,13 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 
 @Repository
 public class TagRepository implements CrudRepositoryInterface<Tag> {
 
-    private static final String SELECT_ALL = "select * from tag";
+    private static final String SELECT_ALL = "select * from tag order by id";
     private static final String SELECT_BY_ID = "select * from tag where id = ?";
     private static final String SELECT_BY_NAME = "select * from tag where name = ?";
     private static final String SAVE = "insert into tag set name = ?";
@@ -35,8 +36,11 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
             statement.setString(1, name);
             return statement;
         }, rowMapper);
-        return Optional.ofNullable(
-                tagList.get(0));
+        if (tagList.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(tagList.get(0));
+        }
     }
 
     @Override
@@ -62,39 +66,22 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
         }
     }
 
-    public List<Map<String, Object>> save(List<Tag> tags) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        StringBuilder builder = new StringBuilder();
-        builder.append("insert into tag (name) values");
-        for (int i = 0; i < tags.size(); i++) {
-            Tag tag = tags.get(i);
-            builder.append("('");
-            builder.append(
-                    tag.getName());
-            if (i + 1 == tags.size()) {
-                builder.append("')");
-            } else {
-                builder.append("'), ");
-            }
-        }
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(
-                    builder.toString(),
-                    Statement.RETURN_GENERATED_KEYS);
-            return statement;
-        }, keyHolder);
-        return keyHolder.getKeyList();
+    @Override
+    public void save(Tag tag) {
+        saveNew(tag);
     }
 
-    @Override
-    public void save(Tag entity) {
+    public Long saveNew(Tag tag) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String name = entity.getName();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(SAVE);
+        String name = tag.getName();
+        jdbcTemplate.update(con -> {
+            PreparedStatement statement = con.prepareStatement(SAVE,
+                    Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, name);
             return statement;
         }, keyHolder);
+        return keyHolder.getKey()
+                .longValue();
     }
 
     @Override
@@ -109,5 +96,8 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
 
     @Override
     public void update(Tag entity) {
+
+        //unnecessary operation for Tag
+        //empty method to implement CrudService interface
     }
 }

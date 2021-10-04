@@ -2,10 +2,10 @@ package com.epam.esm.services;
 
 import com.epam.esm.entities.Tag;
 import com.epam.esm.repositories.TagRepository;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -28,10 +28,6 @@ public class TagService implements CrudService<Tag> {
         return optionalTag.isPresent();
     }
 
-    public List<Map<String, Object>> save(List<Tag> tags) {
-        return repository.save(tags);
-    }
-
     @Override
     public void save(Tag tag) {
         if (!isTagWithNameExists(tag)) {
@@ -50,6 +46,9 @@ public class TagService implements CrudService<Tag> {
 
     @Override
     public void update(Tag tag) {
+
+        //unnecessary operation for Tag
+        //empty method to implement CrudService interface
     }
 
     @Override

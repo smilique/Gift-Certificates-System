@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class TagServiceTest {
 
@@ -48,15 +46,6 @@ class TagServiceTest {
         tagService.save(FIRST_TAG);
         //then
         Mockito.verify(tagRepository, Mockito.times(wantedNumberOfInvocations)).save(FIRST_TAG);
-    }
-
-    @Test
-    void testTagServiceShouldSaveNewTags() {
-        //given
-        //when
-        tagService.save(TAGS);
-        //then
-        Mockito.verify(tagRepository, Mockito.times(wantedNumberOfInvocations)).save(TAGS);
     }
 
     @Test

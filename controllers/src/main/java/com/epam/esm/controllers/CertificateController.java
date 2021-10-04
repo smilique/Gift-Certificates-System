@@ -57,15 +57,10 @@ public class CertificateController {
                                                   @RequestParam(value = "sortByDate", required = false) String sortByDate,
                                                   @RequestParam(value = "search", required = false) String searchString) throws JsonProcessingException {
         List<Certificate> certificates;
-        if (searchString == null && sortByDate == null && sortByName == null) {
-            certificates = certificateService.getAll();
-        } else if (searchString == null) {
-            certificates = certificateService.list(sortByName, sortByDate);
-        } else {
-            certificates = certificateService.search(sortByName, sortByDate, searchString);
-        }
-        return ResponseEntity.ok(
-                objectMapper.writeValueAsString(certificates));
+        certificates = certificateService.search(sortByName, sortByDate, searchString);
+        return ResponseEntity.ok(objectMapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(certificates));
     }
 
     /**
@@ -76,9 +71,11 @@ public class CertificateController {
      */
     @GetMapping("/search")
     public ResponseEntity<String> searchCertificates(@RequestParam(value = "value") String searchString) {
-        List<Certificate> certificates = certificateService.list(searchString);
+        List<Certificate> certificates = certificateService.getByName(searchString);
         try {
-            return ResponseEntity.ok(objectMapper.writeValueAsString(certificates));
+            return ResponseEntity.ok(objectMapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(certificates));
         } catch (JsonProcessingException e) {
             LOGGER.error(e);
             return ResponseEntity.badRequest()
@@ -95,9 +92,10 @@ public class CertificateController {
     @GetMapping("/get")
     public ResponseEntity<String> getCertificatesByTag(@RequestParam("tagName") String tagName) {
         try {
-            List<Certificate> certificates = certificateService.listByTagName(tagName);
+            List<Certificate> certificates = certificateService.getByTagName(tagName);
             return ResponseEntity.ok(
-                    objectMapper.writeValueAsString(certificates));
+                    objectMapper.writerWithDefaultPrettyPrinter()
+                            .writeValueAsString(certificates));
         } catch (JsonProcessingException e) {
             return ResponseEntity.badRequest()
                     .build();
@@ -116,8 +114,9 @@ public class CertificateController {
         Optional<Certificate> optionalCertificate = certificateService.get(id);
         if (optionalCertificate.isPresent()) {
             Certificate certificate = optionalCertificate.get();
-            return ResponseEntity.ok(
-                    objectMapper.writeValueAsString(certificate));
+            return ResponseEntity.ok(objectMapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(certificate));
         } else {
             return ResponseEntity.badRequest()
                     .build();
@@ -161,11 +160,6 @@ public class CertificateController {
     public ResponseEntity<String> updateCertificate(@RequestBody String body) {
         Certificate certificate = new Gson().fromJson(body, Certificate.class);
         certificateService.updateExistingCertificate(certificate);
-//        List<Tag> tags = certificate.getTags();
-//        List<Map<String, Object>> tagKeys = tagService.save(tags);
-//        Long certificateId = certificate.getId();
-//        certificateService.setTags(tagKeys, certificateId);
-//        certificateService.update(certificate);
         return ResponseEntity.accepted()
                 .build();
     }

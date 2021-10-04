@@ -1,3 +1,9 @@
+
+drop table if exists gift_certificates.tagged_gift_certificate;
+drop table if exists gift_certificates.gift_certificate;
+drop table if exists gift_certificates.tag;
+drop database if exists gift_certificates;
+
 create database gift_certificates;
 use gift_certificates;
 
@@ -16,7 +22,8 @@ create table gift_certificate
 create table tag
 (
     id bigint auto_increment primary key,
-    name varchar(45) null
+    name varchar(45) unique
+#     unique key unique_name (name)
 )
     charset = utf8;
 
@@ -31,3 +38,4 @@ create table tagged_gift_certificate
             foreign key (tag_id) references tag (id) on delete cascade
 )
     charset = utf8;
+
