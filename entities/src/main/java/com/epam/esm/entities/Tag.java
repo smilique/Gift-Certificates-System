@@ -1,10 +1,20 @@
 package com.epam.esm.entities;
 
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.http.ResponseEntity;
+
+import javax.persistence.*;
 import java.util.Objects;
 
-public class Tag implements Entity {
 
+@Entity
+public class Tag extends RepresentationModel<Tag> implements EntityInterface {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long id;
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     public Tag() {

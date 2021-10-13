@@ -1,5 +1,7 @@
 package com.epam.esm.entities;
 
+import java.io.Serializable;
+
 /**
  * The interface declares its successors must have an obligatory id field
  *
@@ -8,7 +10,7 @@ package com.epam.esm.entities;
  * @see Certificate
  * @see Tag
  */
-public interface Entity {
+public interface EntityInterface extends Serializable {
 
     /**
      * The method sets a Long identifier of object

@@ -1,7 +1,11 @@
 package com.epam.esm.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
+import org.springframework.hateoas.RepresentationModel;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,23 +13,49 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Certificate implements Entity {
 
+@Entity
+@Table(name = "gift_certificate")
+public class Certificate extends RepresentationModel<Tag> implements EntityInterface {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private Long duration;
+    @Column(name = "create_date")
+    @Generated(value = GenerationTime.INSERT)
     private ZonedDateTime createDate;
+    @Column(name = "last_update_date")
+    @Generated(value = GenerationTime.INSERT)
     private ZonedDateTime lastUpdateDate;
 
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Tag.class)
+    @JoinTable(name = "tagged_gift_certificate", joinColumns = {@JoinColumn(name = "gift_certificate_id", referencedColumnName = "id")},
+    inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
     @JsonProperty("tags")
     private List<Tag> tags;
+
 
     public Certificate() {
     }
 
-    public Certificate(Long id, String name, String description, BigDecimal price, Long duration, ZonedDateTime createDate, ZonedDateTime lastUpdateDate) {
+    public Certificate(Long id, String name, String description, BigDecimal price, Long duration,
+                       ZonedDateTime createDate, ZonedDateTime lastUpdateDate, List<Tag> tags) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+    }
+
+    public Certificate(Long id, String name, String description, BigDecimal price, Long duration,
+                       ZonedDateTime createDate, ZonedDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -35,7 +65,8 @@ public class Certificate implements Entity {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Certificate(Long id, String name, String description, BigDecimal price, Long duration, String createDate, String lastUpdateDate) {
+    public Certificate(Long id, String name, String description, BigDecimal price, Long duration,
+                       String createDate, String lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
