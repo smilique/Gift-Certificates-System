@@ -54,11 +54,11 @@ class CertificateServiceTest {
     CertificateService certificateService;
 
     @Test
-    void testCertificateServiceShouldReturnCertificateEntitiesFromDb() {
+    void testCertificateServiceShouldReturnCertificateEntities() {
         //given
-        Mockito.when(certificateRepository.findAll()).thenReturn(CERTIFICATES);
+        Mockito.when(certificateRepository.findAll(0,2)).thenReturn(CERTIFICATES);
         //when
-        List<Certificate> actual = certificateService.getAll();
+        List<Certificate> actual = certificateService.getAll(1,2);
         //then
         Assertions.assertEquals(CERTIFICATES, actual);
     }
@@ -69,9 +69,9 @@ class CertificateServiceTest {
         List<Certificate> expected = new ArrayList<>();
         expected.add(THIRD_CERTIFICATE);
         String searchString = THIRD_CERTIFICATE.getDescription();
-        Mockito.when(certificateRepository.find(searchString)).thenReturn(expected);
+        Mockito.when(certificateRepository.find(searchString,0,2)).thenReturn(expected);
         //when
-        List<Certificate> actual = certificateService.getByName(searchString);
+        List<Certificate> actual = certificateService.getByName(searchString,1,2);
         //then
         Assertions.assertEquals(expected, actual);
     }
@@ -80,9 +80,9 @@ class CertificateServiceTest {
     void testCertificateServiceShouldSortResultsByCertificateNameAndDate() {
         //given
         List<Certificate> expected = Arrays.asList(SECOND_CERTIFICATE, FIRST_CERTIFICATE, THIRD_CERTIFICATE);
-        Mockito.when(certificateRepository.findAll(NAME_SORT, DATE_SORT)).thenReturn(expected);
+        Mockito.when(certificateRepository.findAll(NAME_SORT, DATE_SORT,0,2)).thenReturn(expected);
         //when
-        List<Certificate> actual = certificateService.getByName(NAME_SORT, DATE_SORT);
+        List<Certificate> actual = certificateService.getByName(NAME_SORT, DATE_SORT,1,2);
         //then
         Assertions.assertEquals(expected, actual);
     }
@@ -91,15 +91,15 @@ class CertificateServiceTest {
     void testCertificateServiceShouldSortSearchResultsByCertificateNameAndDate() {
         //given
         List<Certificate> expected = Arrays.asList(SECOND_CERTIFICATE, FIRST_CERTIFICATE);
-        Mockito.when(certificateRepository.findAndSort(NAME_SORT, DATE_SORT, SEARCH_STRING)).thenReturn(expected);
+        Mockito.when(certificateRepository.findAndSort(NAME_SORT, DATE_SORT, SEARCH_STRING,0,2)).thenReturn(expected);
         //when
-        List<Certificate> actual = certificateService.search(NAME_SORT, DATE_SORT, SEARCH_STRING);
+        List<Certificate> actual = certificateService.search(NAME_SORT, DATE_SORT, SEARCH_STRING,1,2);
         //then
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    void testCertificateServiceShouldPassCertificateEntityToRepository() {
+    void testCertificateServiceShouldPassCertificateToRepository() {
         //given
         List<Tag> tags = Arrays.asList(TAG);
         FIRST_CERTIFICATE.setTags(tags);
@@ -110,7 +110,7 @@ class CertificateServiceTest {
         //when
         certificateService.save(FIRST_CERTIFICATE);
         //then
-        Mockito.verify(certificateRepository, Mockito.times(WANTED_NUMBER_OF_INVOCATIONS)).createNewCertificate(FIRST_CERTIFICATE, tags);
+        Mockito.verify(certificateRepository, Mockito.times(WANTED_NUMBER_OF_INVOCATIONS)).save(FIRST_CERTIFICATE);
     }
 
     @Test
@@ -126,7 +126,7 @@ class CertificateServiceTest {
     }
 
     @Test
-    void testCertificateServiceShouldPassUpdatedCertificateEntityToRepository() {
+    void testCertificateServiceShouldPassUpdatedCertificateToRepository() {
         //given
         //when
         certificateService.update(FIRST_CERTIFICATE);

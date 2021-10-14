@@ -2,7 +2,6 @@ package com.epam.esm.services;
 
 import com.epam.esm.entities.Tag;
 import com.epam.esm.repositories.TagRepository;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,21 +17,14 @@ public class TagService implements CrudService<Tag> {
     }
 
     @Override
-    public List<Tag> getAll() {
-        return repository.findAll();
-    }
-
-    private boolean isTagWithNameExists(Tag tag) {
-        String name = tag.getName();
-        Optional<Tag> optionalTag = repository.findByName(name);
-        return optionalTag.isPresent();
+    public List<Tag> getAll(Integer currentPage, Integer itemsPerPage) {
+        Integer startPosition = currentPage * itemsPerPage - itemsPerPage;
+        return repository.findAll(startPosition, itemsPerPage);
     }
 
     @Override
     public void save(Tag tag) {
-        if (!isTagWithNameExists(tag)) {
-            repository.save(tag);
-        }
+        repository.save(tag);
     }
 
     @Override
@@ -44,11 +36,14 @@ public class TagService implements CrudService<Tag> {
         return repository.findByName(name);
     }
 
+    public Optional<Tag> getMostUsedTag() {
+        return repository.findMostUsedTag();
+    }
+
     @Override
     public void update(Tag tag) {
 
-        //unnecessary operation for Tag
-        //empty method to implement CrudService interface
+        //unsupported operation for Tag
     }
 
     @Override

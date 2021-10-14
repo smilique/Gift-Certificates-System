@@ -1,6 +1,6 @@
 package com.epam.esm.services;
 
-import com.epam.esm.entities.Entity;
+import com.epam.esm.entities.EntityInterface;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,16 +11,16 @@ import java.util.Optional;
  * @author Anton Tamashevich
  * @version 1.0
  * @param <T>
- * @see com.epam.esm.entities.Entity
+ * @see EntityInterface
  */
-public interface CrudService<T extends Entity> {
+public interface CrudService<T extends EntityInterface> {
 
     /**
      * Get all entities of T
      *
      * @return List<T>
      */
-    List<T> getAll();
+    List<T> getAll(Integer currentPage, Integer itemsPerPage);
 
     /**
      * Save T entity into the db

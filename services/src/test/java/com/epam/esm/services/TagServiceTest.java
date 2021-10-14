@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,9 +33,9 @@ class TagServiceTest {
     @Test
     void testTagServiceShouldReturnMultiplyEntitiesWhenGetAllCalled() {
         //given
-        Mockito.when(tagRepository.findAll()).thenReturn(TAGS);
+        Mockito.when(tagRepository.findAll(0,2)).thenReturn(TAGS);
         //when
-        List<Tag> actual = tagService.getAll();
+        List<Tag> actual = tagService.getAll(1,2);
         //then
         Assertions.assertEquals(TAGS, actual);
     }
