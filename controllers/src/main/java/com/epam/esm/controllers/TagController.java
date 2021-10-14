@@ -2,8 +2,9 @@ package com.epam.esm.controllers;
 
 import com.epam.esm.entities.Tag;
 import com.epam.esm.services.TagService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,31 +17,41 @@ import java.util.Optional;
  * @author Anton Tamashevich
  * @version 1.0
  * @see com.epam.esm.services.TagService
+ * @see com.epam.esm.controllers.LinkBuilder
  */
-
 @RestController
 @RequestMapping("/tags")
 public class TagController {
 
     private final TagService tagService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final LinkBuilder linkBuilder;
 
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService, LinkBuilder linkBuilder) {
         this.tagService = tagService;
+        this.linkBuilder = linkBuilder;
     }
 
     /**
      * Gets all Tag entries from db sorted by Tag id
      *
+     * @param currentPage  obligatory parameter, current page number
+     * @param itemsPerPage obligatory parameter, maximum number of items listed per page
      * @return ResponseEntity<>
-     * @throws JsonProcessingException
      */
     @GetMapping
-    public ResponseEntity<String> getTags() throws JsonProcessingException {
-        List<Tag> tags = tagService.getAll();
-        return ResponseEntity.ok(objectMapper
-                .writerWithDefaultPrettyPrinter()
-                .writeValueAsString(tags));
+    public ResponseEntity<?> getTags(@RequestParam(value = "page") Integer currentPage,
+                                     @RequestParam(value = "items") Integer itemsPerPage) {
+        List<Tag> tags = tagService.getAll(currentPage, itemsPerPage);
+        for (Tag tag : tags) {
+            List<Link> links = linkBuilder.get(tag);
+            tag.add(links);
+        }
+        Link self = WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(TagController.class)
+                                .getTags(currentPage, itemsPerPage))
+                .withSelfRel();
+        CollectionModel<Tag> model = CollectionModel.of(tags, self);
+        return ResponseEntity.ok(model);
     }
 
     /**
@@ -48,19 +59,11 @@ public class TagController {
      *
      * @param id obligatory, Tag id
      * @return ResponseEntity<>
-     * @throws JsonProcessingException
      */
     @GetMapping("/{id}")
-    public ResponseEntity<String> getTag(@PathVariable Long id) throws JsonProcessingException {
+    public ResponseEntity<?> getTag(@PathVariable Long id) {
         Optional<Tag> optionalTag = tagService.get(id);
-        if (optionalTag.isPresent()) {
-            Tag tag = optionalTag.get();
-            return ResponseEntity.ok(objectMapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(tag));
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return getResponseEntity(optionalTag);
     }
 
     /**
@@ -68,19 +71,11 @@ public class TagController {
      *
      * @param name obligatory, Tag name
      * @return ResponseEntity<>
-     * @throws JsonProcessingException
      */
     @GetMapping("/search/{name}")
-    public ResponseEntity<String> getTagByName(@PathVariable String name) throws JsonProcessingException {
+    public ResponseEntity<?> getTagByName(@PathVariable String name) {
         Optional<Tag> optionalTag = tagService.get(name);
-        if (optionalTag.isPresent()) {
-            Tag tag = optionalTag.get();
-            return ResponseEntity.ok(objectMapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(tag));
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return getResponseEntity(optionalTag);
     }
 
     /**
@@ -90,21 +85,47 @@ public class TagController {
      * @return ResponseEntity<>
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTag(@PathVariable Long id) {
+    public ResponseEntity<?> deleteTag(@PathVariable Long id) {
         tagService.delete(id);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted()
+                .build();
     }
 
     /**
-     * Add Certificate entity to the db
+     * Add Tag entity to the db
      *
-     * @param tag Certificate entity in JSON format
+     * @param tag Tag entity in JSON
      * @return ResponseEntity<>
      */
-    @PostMapping("/add")
-    public ResponseEntity<String> addTag(@RequestBody Tag tag) {
+    @PostMapping("")
+    public ResponseEntity<?> addTag(@RequestBody Tag tag) {
         tagService.save(tag);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted()
+                .build();
+    }
+
+
+    /**
+     * Get most used Tag entity of User with maximal cost of orders
+     *
+     * @return ResponseEntity<>
+     */
+    @GetMapping("/topTag")
+    public ResponseEntity<?> getMostUsedTagOfTopBuyer() {
+        Optional<Tag> optionalTag = tagService.getMostUsedTag();
+        return getResponseEntity(optionalTag);
+    }
+
+    private ResponseEntity<?> getResponseEntity(Optional<Tag> optionalTag) {
+        if (optionalTag.isPresent()) {
+            Tag tag = optionalTag.get();
+            List<Link> links = linkBuilder.get(tag);
+            tag.add(links);
+            return ResponseEntity.ok(tag);
+        } else {
+            return ResponseEntity.badRequest()
+                    .build();
+        }
     }
 
 }
