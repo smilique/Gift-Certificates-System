@@ -8,7 +8,6 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
