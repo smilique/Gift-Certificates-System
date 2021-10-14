@@ -1,6 +1,6 @@
 package com.epam.esm.repositories;
 
-import com.epam.esm.entities.Entity;
+import com.epam.esm.entities.EntityInterface;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,20 +8,20 @@ import java.util.Optional;
 /**
  * The interface represents a pattern for interacting with database
  *
- * @author Anton Tomashevich
+ * @author Anton Tamashevich
  * @version 1.0
  * @see com.epam.esm.repository
  * @param <T>
- * @see com.epam.esm.entities.Entity
+ * @see EntityInterface
  */
-public interface CrudRepositoryInterface<T extends Entity> {
+public interface CrudRepositoryInterface<T extends EntityInterface> {
 
     /**
      * The method for getting from multiple entities from db
      *
      * @return List<T> list of entities
      */
-    List<T> findAll();
+    List<T> findAll(Integer startPosition, Integer itemsPerPage);
 
     /**
      * The method for getting single instance of entity from db
@@ -34,7 +34,7 @@ public interface CrudRepositoryInterface<T extends Entity> {
     /**
      * The method for adding single entity data in db
      *
-     * @param entity Entity to insert into db {@link Entity}
+     * @param entity Entity to insert into db {@link EntityInterface}
      */
     void save(T entity);
 
@@ -48,7 +48,7 @@ public interface CrudRepositoryInterface<T extends Entity> {
     /**
      * The method for updating single entity fields in db
      *
-     * @param entity Entity with updated fields {@link Entity}
+     * @param entity Entity with updated fields {@link EntityInterface}
      */
     void update(T entity);
 
