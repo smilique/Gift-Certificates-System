@@ -13,31 +13,40 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-
-@Entity
+@Entity(name = "Certificate")
 @Table(name = "gift_certificate")
 public class Certificate extends RepresentationModel<Tag> implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "name", length = 45)
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "price", precision = 9, scale = 2)
     private BigDecimal price;
+
+    @Column(name = "duration")
     private Long duration;
-    @Column(name = "create_date")
+
+    @Column(name = "create_date", insertable = false)
     @Generated(value = GenerationTime.INSERT)
     private ZonedDateTime createDate;
-    @Column(name = "last_update_date")
-    @Generated(value = GenerationTime.INSERT)
+    @Column(name = "last_update_date", insertable = false)
+    @Generated(value = GenerationTime.ALWAYS)
     private ZonedDateTime lastUpdateDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Tag.class)
-    @JoinTable(name = "tagged_gift_certificate", joinColumns = {@JoinColumn(name = "gift_certificate_id", referencedColumnName = "id")},
-    inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Tag.class, cascade = CascadeType.ALL)
+    @JoinTable(name = "tagged_gift_certificate",
+            joinColumns = {@JoinColumn(name = "gift_certificate_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
     @JsonProperty("tags")
     private List<Tag> tags;
-
 
     public Certificate() {
     }
@@ -159,8 +168,12 @@ public class Certificate extends RepresentationModel<Tag> implements EntityInter
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Certificate that = (Certificate) o;
         return Objects.equals(id,
                 that.id) &&
@@ -185,10 +198,10 @@ public class Certificate extends RepresentationModel<Tag> implements EntityInter
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", price=" + price.floatValue() +
+                ", price=" + price +
                 ", duration=" + duration +
-                ", createDate=" + createDate.format(DateTimeFormatter.ISO_INSTANT) +
-                ", lastUpdateDate=" + lastUpdateDate.format(DateTimeFormatter.ISO_INSTANT) +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
                 ", tags=" + tags +
                 '}';
     }

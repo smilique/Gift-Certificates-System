@@ -1,19 +1,20 @@
 package com.epam.esm.entities;
 
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.http.ResponseEntity;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 
-@Entity
+@Entity(name = "Tag")
+@Table(name = "tag")
 public class Tag extends RepresentationModel<Tag> implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id", nullable = false)
     private Long id;
+
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
@@ -57,13 +58,16 @@ public class Tag extends RepresentationModel<Tag> implements EntityInterface {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Tag tag = (Tag) o;
         return Objects.equals(id,
                 tag.id) &&
-                Objects.equals(name,
-                        tag.name);
+                Objects.equals(name, tag.name);
     }
 
     @Override

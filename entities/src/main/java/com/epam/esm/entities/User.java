@@ -1,38 +1,27 @@
 package com.epam.esm.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-@Entity
-@Table(name="user")
+@Entity(name = "User")
+@Table(name = "user")
 public class User extends RepresentationModel<Tag> implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "name", length = 45)
     private String name;
+
+    @Column(name = "balance", precision = 9, scale = 2)
     private BigDecimal balance;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = User.class)
-    @JoinTable(name = "orders", joinColumns =
-            {@JoinColumn(name = "user_id", referencedColumnName = "id")})
-    @JsonProperty("orders")
-    private List<Order> orders;
-
     public User() {
-    }
-
-    public User(Long id, String name, BigDecimal balance, List<Order> orders) {
-        this.id = id;
-        this.name = name;
-        this.balance = balance;
-        this.orders = orders;
     }
 
     public User(Long id, String name, BigDecimal balance) {
@@ -57,27 +46,6 @@ public class User extends RepresentationModel<Tag> implements EntityInterface {
         this.balance = balance;
     }
 
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public void setOrders(Order... orders) {
-        setOrders(Arrays.asList(orders));
-    }
-
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
-
-    public void addOrders(Order... additionalOrders) {
-        orders.addAll(
-                Arrays.asList(additionalOrders));
-    }
-
     @Override
     public void setId(Long id) {
         this.id = id;
@@ -94,7 +62,6 @@ public class User extends RepresentationModel<Tag> implements EntityInterface {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", balance=" + balance +
-                ", orders=" + orders +
                 '}';
     }
 
@@ -109,13 +76,11 @@ public class User extends RepresentationModel<Tag> implements EntityInterface {
         User user = (User) o;
         return Objects.equals(id, user.id) &&
                 Objects.equals(name, user.name) &&
-                (balance.compareTo(
-                        user.balance) == 0) &&
-                Objects.equals(orders, user.orders);
+                (balance.compareTo(user.balance) == 0);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, balance, orders);
+        return Objects.hash(id, name);
     }
 }

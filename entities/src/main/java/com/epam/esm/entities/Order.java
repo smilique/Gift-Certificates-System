@@ -1,6 +1,5 @@
 package com.epam.esm.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -8,24 +7,27 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "Order")
 @Table(name = "orders")
 public class Order extends RepresentationModel<Tag> implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "cost", precision = 9, scale = 2)
     private BigDecimal cost;
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Certificate.class)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "certificate_id", referencedColumnName = "id")
-    @JsonProperty("certificate")
     private Certificate certificate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @Column(name = "date")
     private ZonedDateTime date;
 
     public Order() {
@@ -39,10 +41,11 @@ public class Order extends RepresentationModel<Tag> implements EntityInterface {
         this.date = orderDate;
     }
 
-    public Order(Long id, BigDecimal cost, Certificate certificate, String orderDate) {
+    public Order(Long id, BigDecimal cost, Certificate certificate, User user, String orderDate) {
         this.id = id;
         this.cost = cost;
         this.certificate = certificate;
+        this.user = user;
         this.date = ZonedDateTime
                 .parse(orderDate);
     }
@@ -56,7 +59,6 @@ public class Order extends RepresentationModel<Tag> implements EntityInterface {
     public Long getId() {
         return id;
     }
-
 
     public BigDecimal getCost() {
         return cost;
@@ -91,16 +93,6 @@ public class Order extends RepresentationModel<Tag> implements EntityInterface {
     }
 
     @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", cost=" + cost +
-                ", certificate=" + certificate +
-                ", date=" + date +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -110,15 +102,26 @@ public class Order extends RepresentationModel<Tag> implements EntityInterface {
         }
         Order order = (Order) o;
         return Objects.equals(id, order.id) &&
-                (cost.compareTo(
-                        order.cost) == 0) &&
+                (cost.compareTo(order.cost) == 0) &&
                 Objects.equals(certificate, order.certificate) &&
+                Objects.equals(user, order.user) &&
                 Objects.equals(date, order.date);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, cost, certificate, date);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", cost=" + cost +
+                ", certificate=" + certificate +
+                ", user=" + user +
+                ", date=" + date +
+                '}';
     }
 }
 
