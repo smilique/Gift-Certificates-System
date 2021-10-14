@@ -1,9 +1,12 @@
 package com.epam.esm.controllers;
 
 import org.apache.log4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +30,48 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
     private static final String REQUEST_PARAMETER_ERROR = "exception.requestParameter";
     private static final String REQUEST_METHOD_ERROR = "exception.requestMethod";
     private static final String NO_HANDLER_EXCEPTION = "exception.noHandler";
+    private static final String EMPTY_RESULT_EXCEPTION = "exception.emptyResult";
+    private static final String JPA_EXCEPTION = "exception.jpa";
+    private static final String DATA_ACCESS_EXCEPTION = "exception.access";
+
+    @ExceptionHandler({InvalidDataAccessApiUsageException.class})
+    private ResponseEntity<Object> handleInvalidDataAccessApiUsageException(Exception exception, WebRequest request) {
+        LOGGER.error(exception);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        int errorCode = status.value();
+        String error = errorCode + "08";
+        Locale locale = request.getLocale();
+        String message = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale)
+                .getString(DATA_ACCESS_EXCEPTION);
+        RestControllerException restControllerException = new RestControllerException(error, message);
+        return new ResponseEntity<>(restControllerException, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler({JpaSystemException.class})
+    private ResponseEntity<Object> handleJpaSystemException(Exception exception, WebRequest request) {
+        LOGGER.error(exception);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        int errorCode = status.value();
+        String error = errorCode + "07";
+        Locale locale = request.getLocale();
+        String message = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale)
+                .getString(JPA_EXCEPTION);
+        RestControllerException restControllerException = new RestControllerException(error, message);
+        return new ResponseEntity<>(restControllerException, new HttpHeaders(), status);
+    }
+
+    @ExceptionHandler({EmptyResultDataAccessException.class})
+    private ResponseEntity<Object> handleEmptyResultDataAccessException(Exception exception, WebRequest request) {
+        LOGGER.error(exception);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        int errorCode = status.value();
+        String error = errorCode + "06";
+        Locale locale = request.getLocale();
+        String message = ResourceBundle.getBundle(ERROR_BUNDLE_NAME, locale)
+                .getString(EMPTY_RESULT_EXCEPTION);
+        RestControllerException restControllerException = new RestControllerException(error, message);
+        return new ResponseEntity<>(restControllerException, new HttpHeaders(), status);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException exception,
