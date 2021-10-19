@@ -40,8 +40,8 @@ public class OrderController {
      * @return ResponseEntity<>
      */
     @GetMapping
-    public ResponseEntity<?> getAll(@RequestParam(value = "page") Integer currentPage,
-                                    @RequestParam(value = "items") Integer itemsPerPage) {
+    public ResponseEntity<?> getAll(@RequestParam(value = "page", defaultValue = "1") Integer currentPage,
+                                    @RequestParam(value = "items", defaultValue = "20") Integer itemsPerPage) {
         List<Order> orders = orderService.getAll(currentPage, itemsPerPage);
         Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder
                         .methodOn(OrderController.class)

@@ -2,7 +2,13 @@ package com.epam.esm.entities;
 
 import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 
@@ -65,9 +71,8 @@ public class Tag extends RepresentationModel<Tag> implements EntityInterface {
             return false;
         }
         Tag tag = (Tag) o;
-        return Objects.equals(id,
-                tag.id) &&
-                Objects.equals(name, tag.name);
+        return Objects.equals(id, tag.id)
+                && Objects.equals(name, tag.name);
     }
 
     @Override

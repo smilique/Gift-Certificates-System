@@ -40,7 +40,7 @@ public class Certificate extends RepresentationModel<Tag> implements EntityInter
     @Generated(value = GenerationTime.ALWAYS)
     private ZonedDateTime lastUpdateDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Tag.class, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Tag.class)
     @JoinTable(name = "tagged_gift_certificate",
             joinColumns = {@JoinColumn(name = "gift_certificate_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
@@ -166,32 +166,6 @@ public class Certificate extends RepresentationModel<Tag> implements EntityInter
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Certificate that = (Certificate) o;
-        return Objects.equals(id,
-                that.id) &&
-                Objects.equals(name,
-                        that.name) &&
-                Objects.equals(description,
-                        that.description) &&
-                (price.compareTo(
-                        that.price) == 0) &&
-                Objects.equals(duration, that.duration) &&
-                Objects.equals(tags, that.tags);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, tags);
-    }
-
-    @Override
     public String toString() {
         return "Certificate{" +
                 "id=" + id +
@@ -203,5 +177,27 @@ public class Certificate extends RepresentationModel<Tag> implements EntityInter
                 ", lastUpdateDate=" + lastUpdateDate +
                 ", tags=" + tags +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Certificate that = (Certificate) o;
+        return Objects.equals(id, that.id)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && (price.compareTo(that.price) == 0)
+                && Objects.equals(duration, that.duration)
+                && Objects.equals(tags, that.tags);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, price, duration, tags);
     }
 }

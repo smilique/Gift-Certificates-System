@@ -19,7 +19,7 @@ public class Order extends RepresentationModel<Tag> implements EntityInterface {
     @Column(name = "cost", precision = 9, scale = 2)
     private BigDecimal cost;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "certificate_id", referencedColumnName = "id")
     private Certificate certificate;
 
@@ -93,6 +93,17 @@ public class Order extends RepresentationModel<Tag> implements EntityInterface {
     }
 
     @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", cost=" + cost +
+                ", certificate=" + certificate +
+                ", user=" + user +
+                ", date=" + date +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -111,17 +122,6 @@ public class Order extends RepresentationModel<Tag> implements EntityInterface {
     @Override
     public int hashCode() {
         return Objects.hash(id, cost, certificate, date);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", cost=" + cost +
-                ", certificate=" + certificate +
-                ", user=" + user +
-                ", date=" + date +
-                '}';
     }
 }
 

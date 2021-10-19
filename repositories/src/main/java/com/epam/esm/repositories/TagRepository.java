@@ -1,10 +1,10 @@
 package com.epam.esm.repositories;
 
 import com.epam.esm.entities.Tag;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
@@ -22,14 +22,14 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
     private static final String DELETE_BY_ID = "delete from Tag where id = :id";
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private Session session;
 
     public TagRepository() {
     }
 
     @Override
     public List<Tag> findAll(Integer startPosition, Integer itemsPerPage) {
-        Query query = entityManager.createQuery(SELECT_ALL);
+        Query query = session.createQuery(SELECT_ALL);
         query.setFirstResult(startPosition);
         query.setMaxResults(itemsPerPage);
         List<Tag> tags = query.getResultList();
@@ -37,7 +37,7 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
     }
 
     public Optional<Tag> findByName(String name) {
-        Query query = entityManager.createQuery(SELECT_BY_NAME);
+        Query query = session.createQuery(SELECT_BY_NAME);
         query.setParameter("name", name);
         Tag tag = (Tag) query.getSingleResult();
         return Optional.of(tag);
@@ -45,7 +45,7 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
 
     @Override
     public Optional<Tag> findById(Long id) {
-        Query query = entityManager.createQuery(SELECT_BY_ID);
+        Query query = session.createQuery(SELECT_BY_ID);
         query.setParameter("id", id);
         Tag tag = (Tag) query.getSingleResult();
         return Optional.of(tag);
@@ -59,15 +59,15 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
 
     @Transactional
     public Long saveNew(Tag tag) {
-        entityManager.persist(tag);
-        entityManager.flush();
+        session.persist(tag);
+        session.flush();
         return tag.getId();
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        Query query = entityManager.createQuery(DELETE_BY_ID);
+        Query query = session.createQuery(DELETE_BY_ID);
         query.setParameter("id", id);
         query.executeUpdate();
     }
@@ -79,7 +79,7 @@ public class TagRepository implements CrudRepositoryInterface<Tag> {
     }
 
     public Optional<Tag> findMostUsedTag() {
-        Query query = entityManager.createNativeQuery(SELECT_BY_POPULARITY, Tag.class);
+        Query query = session.createNativeQuery(SELECT_BY_POPULARITY, Tag.class);
         Tag tag = (Tag) query.getSingleResult();
         return Optional.of(tag);
     }

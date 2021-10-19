@@ -40,11 +40,13 @@ public class OrderService implements CrudService<Order> {
 
     @Override
     public void update(Order order) {
-        orderRepository.save(order);
+
+        //unsupported operation for Order
     }
 
     @Override
     public void delete(Long id) {
+
         //unsupported operation for Order
     }
 }

@@ -39,8 +39,8 @@ public class UserController {
      * @return ResponseEntity<>
      */
     @GetMapping
-    public ResponseEntity<?> getUsers(@RequestParam(value = "page") Integer currentPage,
-                                      @RequestParam(value = "items") Integer itemsPerPage) {
+    public ResponseEntity<?> getUsers(@RequestParam(value = "page", defaultValue = "1") Integer currentPage,
+                                      @RequestParam(value = "items", defaultValue = "20") Integer itemsPerPage) {
         List<User> users = userService.getAll(currentPage, itemsPerPage);
         Link selfLink = WebMvcLinkBuilder.linkTo(
                         WebMvcLinkBuilder.methodOn(UserController.class)

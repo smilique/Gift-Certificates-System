@@ -51,8 +51,8 @@ public class CertificateController {
     public ResponseEntity<?> getCertificates(@RequestParam(value = "sortByName", required = false) String sortByName,
                                              @RequestParam(value = "sortByDate", required = false) String sortByDate,
                                              @RequestParam(value = "search", required = false) String searchString,
-                                             @RequestParam(value = "page") Integer currentPage,
-                                             @RequestParam(value = "items") Integer itemsPerPage) {
+                                             @RequestParam(value = "page", defaultValue = "1") Integer currentPage,
+                                             @RequestParam(value = "items", defaultValue = "20") Integer itemsPerPage) {
         List<Certificate> certificates;
         certificates = certificateService.search(sortByName, sortByDate, searchString, currentPage, itemsPerPage);
         for (Certificate certificate : certificates) {
@@ -77,8 +77,8 @@ public class CertificateController {
      */
     @GetMapping("/search")
     public ResponseEntity<?> searchCertificates(@RequestParam(value = "value") String searchString,
-                                                @RequestParam(value = "page") Integer currentPage,
-                                                @RequestParam(value = "items") Integer itemsPerPage) {
+                                                @RequestParam(value = "page", defaultValue = "1") Integer currentPage,
+                                                @RequestParam(value = "items", defaultValue = "20") Integer itemsPerPage) {
 
         List<Certificate> certificates = certificateService.getByName(searchString, currentPage, itemsPerPage);
         for (Certificate certificate : certificates) {
@@ -103,8 +103,8 @@ public class CertificateController {
      */
     @GetMapping("/searchByTags")
     public ResponseEntity<?> search(@RequestParam(value = "tag") List<String> tagNames,
-                                    @RequestParam(value = "page") Integer currentPage,
-                                    @RequestParam(value = "items") Integer itemsPerPage) {
+                                    @RequestParam(value = "page", defaultValue = "1") Integer currentPage,
+                                    @RequestParam(value = "items", defaultValue = "20") Integer itemsPerPage) {
         List<Certificate> certificates = certificateService.getByTagName(tagNames, currentPage, itemsPerPage);
         for (Certificate certificate : certificates) {
             List<Link> links = linkBuilder.get(certificate);
@@ -128,8 +128,8 @@ public class CertificateController {
      */
     @GetMapping("/get")
     public ResponseEntity<?> getCertificatesByTag(@RequestParam("tagName") String tagName,
-                                                  @RequestParam(value = "page") Integer currentPage,
-                                                  @RequestParam(value = "items") Integer itemsPerPage) {
+                                                  @RequestParam(value = "page", defaultValue = "1") Integer currentPage,
+                                                  @RequestParam(value = "items", defaultValue = "20") Integer itemsPerPage) {
         return search(Collections.singletonList(tagName), currentPage, itemsPerPage);
     }
 
@@ -205,11 +205,11 @@ public class CertificateController {
      * @return ResponseEntity<>
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateCertificateName(@PathVariable Long id,
-                                                   @RequestParam(required = false, value = "name") String name,
-                                                   @RequestParam(required = false, value = "description") String description,
-                                                   @RequestParam(required = false, value = "price") BigDecimal price,
-                                                   @RequestParam(required = false, value = "duration") Long duration) {
+    public ResponseEntity<?> updateCertificateField(@PathVariable Long id,
+                                                    @RequestParam(required = false, value = "name") String name,
+                                                    @RequestParam(required = false, value = "description") String description,
+                                                    @RequestParam(required = false, value = "price") BigDecimal price,
+                                                    @RequestParam(required = false, value = "duration") Long duration) {
         certificateService.updateExistingCertificate(id, name, description, price, duration);
         return ResponseEntity.accepted().build();
     }

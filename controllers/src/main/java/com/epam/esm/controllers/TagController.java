@@ -39,8 +39,8 @@ public class TagController {
      * @return ResponseEntity<>
      */
     @GetMapping
-    public ResponseEntity<?> getTags(@RequestParam(value = "page") Integer currentPage,
-                                     @RequestParam(value = "items") Integer itemsPerPage) {
+    public ResponseEntity<?> getTags(@RequestParam(value = "page", defaultValue = "1") Integer currentPage,
+                                     @RequestParam(value = "items", defaultValue = "20") Integer itemsPerPage) {
         List<Tag> tags = tagService.getAll(currentPage, itemsPerPage);
         for (Tag tag : tags) {
             List<Link> links = linkBuilder.get(tag);
@@ -103,7 +103,6 @@ public class TagController {
         return ResponseEntity.accepted()
                 .build();
     }
-
 
     /**
      * Get most used Tag entity of User with maximal cost of orders

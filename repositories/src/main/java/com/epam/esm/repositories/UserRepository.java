@@ -1,9 +1,9 @@
 package com.epam.esm.repositories;
 
 import com.epam.esm.entities.User;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
@@ -18,15 +18,15 @@ public class UserRepository implements CrudRepositoryInterface<User> {
             "join orders on user.id = orders.user_id " +
             "where user.id = (select user_id from orders group by user_id order by sum(orders.cost) desc limit 1) group by user.id";
 
-    @PersistenceContext()
-    private EntityManager entityManager;
+    @PersistenceContext
+    private Session session;
 
     public UserRepository() {
     }
 
     @Override
     public List<User> findAll(Integer startPosition, Integer itemsPerPage) {
-        Query query = entityManager.createQuery(GET_ALL);
+        Query query = session.createQuery(GET_ALL);
         query.setFirstResult(startPosition);
         query.setMaxResults(itemsPerPage);
         List<User> users = query.getResultList();
@@ -35,14 +35,14 @@ public class UserRepository implements CrudRepositoryInterface<User> {
 
     @Override
     public Optional<User> findById(Long id) {
-        Query query = entityManager.createQuery(GET_BY_ID);
+        Query query = session.createQuery(GET_BY_ID);
         query.setParameter("id", id);
         User user = (User) query.getSingleResult();
         return Optional.of(user);
     }
 
     public Optional<User> findUsersBySumOfOrders() {
-        Query query = entityManager.createNativeQuery(GET_BY_SUM_OF_ORDERS, User.class);
+        Query query = session.createNativeQuery(GET_BY_SUM_OF_ORDERS, User.class);
         User user = (User) query.getSingleResult();
         return Optional.of(user);
     }

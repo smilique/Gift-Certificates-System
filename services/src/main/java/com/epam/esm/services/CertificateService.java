@@ -64,6 +64,7 @@ public class CertificateService implements CrudService<Certificate> {
     @Override
     @Transactional
     public void save(Certificate certificate) {
+
         certRepository.save(certificate);
     }
 

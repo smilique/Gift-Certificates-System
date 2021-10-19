@@ -34,17 +34,19 @@ public class UserService implements CrudService<User> {
 
     @Override
     public void save(User user) {
+
         //unsupported operation for User
     }
 
     @Override
     public void update(User user) {
-        //unsupported operation for User
 
+        //unsupported operation for User
     }
 
     @Override
     public void delete(Long id) {
+
         //unsupported operation for User
     }
 }
