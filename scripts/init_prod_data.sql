@@ -44,5 +44,10 @@ insert into tagged_gift_certificate set gift_certificate_id = 5, tag_id = 3;
 insert into tagged_gift_certificate set gift_certificate_id = 5, tag_id = 4;
 insert into tagged_gift_certificate set gift_certificate_id = 5, tag_id = 11;
 
+insert into user set name = 'admin', balance = 1000;
+insert into user set name = 'guest', balance = 0;
 
-
+insert into orders set cost = 545, certificate_id = 4, user_id = 1, date = '2020-12-29T11:12:15.001';
+insert into orders set cost = 300, certificate_id = 3, user_id = 1, date = '2020-12-29T07:12:15.010';
+insert into orders set cost = 700, certificate_id = 5, user_id = 1, date = '2020-12-29T05:12:15.100';
+insert into orders set cost = 100, certificate_id = 1, user_id = 2, date = '2020-12-01T08:12:15.200';

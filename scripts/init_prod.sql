@@ -1,6 +1,9 @@
+drop table if exists gift_certificates_prod.orders;
+drop table if exists gift_certificates_prod.user;
 drop table if exists gift_certificates_prod.tagged_gift_certificate;
 drop table if exists gift_certificates_prod.gift_certificate;
 drop table if exists gift_certificates_prod.tag;
+
 drop database if exists gift_certificates_prod;
 
 create database gift_certificates_prod;
@@ -34,6 +37,28 @@ create table tagged_gift_certificate
         tag_id bigint null,
         constraint tag
             foreign key (tag_id) references tag (id) on delete cascade
+)
+    charset = utf8;
+
+create table user
+(
+    id bigint auto_increment primary key,
+    name varchar(45) null,
+    balance decimal(9,2) null
+)
+    charset = utf8;
+
+create table orders
+(
+    id bigint auto_increment primary key,
+    cost decimal null,
+    certificate_id bigint null,
+    constraint ordered_certificate
+        foreign key (certificate_id) references gift_certificate (id) on delete cascade,
+    user_id bigint null,
+    constraint ordered_user
+        foreign key (user_id) references user (id) on delete cascade,
+    date datetime(3)
 )
     charset = utf8;
 
