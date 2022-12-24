@@ -1,4 +1,4 @@
-use gift_certificates_prod;
+use gift_certificates;
 
 insert into tag set id = 1, name = 'GYM';
 insert into tag set id = 2, name = 'Books';

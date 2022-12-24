@@ -1,4 +1,4 @@
-use gift_certificates;
+use gift_certificates_dev;
 
 insert into tag set id = 1, name = 'GYM';
 insert into tag set id = 2, name = 'Books';
@@ -43,8 +43,13 @@ insert into tagged_gift_certificate set gift_certificate_id = 5, tag_id = 3;
 insert into tagged_gift_certificate set gift_certificate_id = 5, tag_id = 4;
 insert into tagged_gift_certificate set gift_certificate_id = 5, tag_id = 11;
 
-insert into user set name = 'admin', balance = 1000;
-insert into user set name = 'guest', balance = 0;
+insert into role set type = 'admin';
+insert into role set type = 'user';
+insert into role set type = 'guest';
+
+insert into user set login = 'admin', password = md5('admin'), name = 'Admin', balance = 1000, role_id = 1;
+insert into user set login = 'user', password = md5('user'), name = 'User', balance = 0, role_id = 2;
+insert into user set login = 'guest', password = md5('guest'), name = 'User', balance = 0, role_id = 3;
 
 insert into orders set cost = 545, certificate_id = 4, user_id = 1, date = '2020-12-29T11:12:15.001';
 insert into orders set cost = 300, certificate_id = 3, user_id = 1, date = '2020-12-29T07:12:15.010';

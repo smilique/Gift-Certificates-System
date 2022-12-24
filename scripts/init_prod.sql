@@ -1,13 +1,13 @@
-drop table if exists gift_certificates_prod.orders;
-drop table if exists gift_certificates_prod.user;
-drop table if exists gift_certificates_prod.tagged_gift_certificate;
-drop table if exists gift_certificates_prod.gift_certificate;
-drop table if exists gift_certificates_prod.tag;
+drop table if exists gift_certificates.orders;
+drop table if exists gift_certificates.user;
+drop table if exists gift_certificates.tagged_gift_certificate;
+drop table if exists gift_certificates.gift_certificate;
+drop table if exists gift_certificates.tag;
 
-drop database if exists gift_certificates_prod;
+drop database if exists gift_certificates;
 
-create database gift_certificates_prod;
-use gift_certificates_prod;
+create database gift_certificates;
+use gift_certificates;
 
 create table gift_certificate
 (

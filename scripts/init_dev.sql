@@ -1,13 +1,13 @@
-drop table if exists gift_certificates.orders;
-drop table if exists gift_certificates.user;
-drop table if exists gift_certificates.tagged_gift_certificate;
-drop table if exists gift_certificates.gift_certificate;
-drop table if exists gift_certificates.tag;
+drop table if exists gift_certificates_dev.orders;
+drop table if exists gift_certificates_dev.user;
+drop table if exists gift_certificates_dev.tagged_gift_certificate;
+drop table if exists gift_certificates_dev.gift_certificate;
+drop table if exists gift_certificates_dev.tag;
 
-drop database if exists gift_certificates;
+drop database if exists gift_certificates_dev;
 
-create database gift_certificates;
-use gift_certificates;
+create database gift_certificates_dev;
+use gift_certificates_dev;
 
 create table gift_certificate
 (
@@ -44,8 +44,13 @@ create table tagged_gift_certificate
 create table user
 (
     id bigint auto_increment primary key,
+    login varchar(45) null,
+    password varchar(45) null,
     name varchar(45) null,
-    balance decimal(9,2) null
+    balance decimal(9,2) null,
+    role_id bigint null,
+    constraint fk_role_id
+        foreign key (role_id) references role (id) on delete cascade
 )
     charset = utf8;
 
@@ -62,3 +67,10 @@ create table orders
     date datetime(3)
 )
     charset = utf8;
+
+create table role
+(
+    id bigint auto_increment primary key,
+    type varchar(15) null
+)
+charset = utf8;
