@@ -21,6 +21,16 @@ public class User extends RepresentationModel<Tag> implements EntityInterface {
     @Column(name = "balance", precision = 9, scale = 2)
     private BigDecimal balance;
 
+    @Column(name = "login", length = 45)
+    private String login;
+
+    @Column(name = "password", length = 45)
+    private String password;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Role role;
+
     public User() {
     }
 
