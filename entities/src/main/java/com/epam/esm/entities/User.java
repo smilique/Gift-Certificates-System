@@ -71,6 +71,8 @@ public class User extends RepresentationModel<Tag> implements EntityInterface {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", login='" + login +'\'' +
+                ", role='" + role +'\'' +
                 ", balance=" + balance +
                 '}';
     }
@@ -86,6 +88,7 @@ public class User extends RepresentationModel<Tag> implements EntityInterface {
         User user = (User) o;
         return Objects.equals(id, user.id) &&
                 Objects.equals(name, user.name) &&
+                Objects.equals(login, user.login) &&
                 (balance.compareTo(user.balance) == 0);
     }
 
